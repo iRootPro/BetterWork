@@ -33,16 +33,19 @@ def predict_rub_salary_for_HeadHunter(language):
     salaries = []
     count_language = 0
     for vacancie in vacancies:
-        if vacancie['salary']:
-            if vacancie['salary']['currency'] == 'RUR':
-                if language in vacancie['name'].lower():
-                    count_language += 1
-                    if vacancie['salary']['from'] and vacancie['salary']['to']:
-                        salaries.append(int((vacancie['salary']['from']+vacancie['salary']['to']) / 2))
-                    elif vacancie['salary']['from']:
-                        salaries.append(int(vacancie['salary']['from'] * 1.2))
-                    elif vacancie['salary']['to']:
-                        salaries.append(int(vacancie['salary']['to'] * 0.8))
+        if not vacancie['salary']:
+            continue
+        if not vacancie['salary']['currency'] == 'RUR':
+            continue
+        if language in vacancie['name'].lower():
+            count_language += 1
+        if vacancie['salary']['from'] and vacancie['salary']['to']:
+            salaries.append(int((vacancie['salary']['from']+vacancie['salary']['to']) / 2))
+            continue
+        if vacancie['salary']['from']:
+            salaries.append(int(vacancie['salary']['from'] * 1.2))
+        else:
+            salaries.append(int(vacancie['salary']['to'] * 0.8))
     if salaries:
         avg_salary = int(mean(salaries))
     else:
@@ -56,7 +59,7 @@ def predict_rub_salary_for_HeadHunter(language):
     }
     return data
 
-def get_languages():
+def get_languages_statistic():
     languages = {
         'Python': predict_rub_salary_for_HeadHunter('python'),
         'Java': predict_rub_salary_for_HeadHunter('java'),

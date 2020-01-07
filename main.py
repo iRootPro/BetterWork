@@ -1,10 +1,15 @@
 import sj
 import hh
-from table import get_table
+from table import generate_table_of_vacancies
+from terminaltables import AsciiTable
+
 
 def main():
-    get_table(sj.get_languages(), 'SuperJob')
-    get_table(hh.get_languages(), 'HeadHunter')
+    superjob = generate_table_of_vacancies(sj.get_languages_statistic(), 'SuperJob')
+    headhunter = generate_table_of_vacancies(hh.get_languages_statistic(), 'HeadHunter')
+    print(superjob.table)
+    print(headhunter.table)
+
 
 if __name__ == '__main__':
     main()

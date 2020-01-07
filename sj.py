@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from itertools import count
 from statistics import mean
-from table import get_table
 
 load_dotenv()
 
@@ -34,21 +33,31 @@ def predict_rub_salary_for_SuperJob(language):
     salaries = []
     count_language = 0
     for vacancie in vacancies:
-        if vacancie['currency'] == 'rub':
-            if language in vacancie['profession'].lower():
-                count_language += 1
-                if vacancie['payment_from'] and vacancie['payment_to']:
-                    salary = int((vacancie['payment_from'] + vacancie['payment_to']) / 2)
-                    salaries.append(salary)
-                elif vacancie['payment_from']:
-                    salary = int(vacancie['payment_from'] * 1.2)
-                    salaries.append(salary)
-                elif vacancie['payment_to']:
-                    salary = int(vacancie['payment_to']*0.8)
-                    salaries.append(salary)
-    if salaries:
+        if not vacancie['currency'] == 'rub':
+            continue
+        if not language in vacancie['profession'].lower():
+            continue
+        if not vacancie['payment_from'] and vacancie['payment_to']:
+            continue
+        if vacancie['payment_from'] and vacancie['payment_to']:
+            salary = int((vacancie['payment_from'] + vacancie['payment_to']) / 2)
+            salaries.append(salary)
+            count_language += 1
+            continue
+        if vacancie['payment_from']:
+            salary = int(vacancie['payment_from'] * 1.2)
+            salaries.append(salary)
+            count_language += 1
+            continue
+        else:
+            salary = int(vacancie['payment_to']*0.8)
+            salaries.append(salary)
+            count_language += 1
+            continue
+    if not salaries:
+        avg_salary = 0
+    else:
         avg_salary = int(mean(salaries))
-    else: avg_salary = 0
     vacancies_processed = len(salaries)
     data = {
         'vacancies_found': count_language,
@@ -57,7 +66,7 @@ def predict_rub_salary_for_SuperJob(language):
     }
     return data
 
-def get_languages():
+def get_languages_statistic():
     languages = {
         'Python': predict_rub_salary_for_SuperJob('python'),
         'Java': predict_rub_salary_for_SuperJob('java'),

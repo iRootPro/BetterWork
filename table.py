@@ -1,14 +1,14 @@
 from terminaltables import AsciiTable
 
-def get_table(languages, site):
-    data = [['Язык программирования', 'Вакансий найдено',
+def generate_table_of_vacancies(languages, site):
+    data_for_table = [['Язык программирования', 'Вакансий найдено',
             'Ваканский обработано', 'Средняя зарплата']]
-    for language in languages.items():
-        data.append([language[0], language[1]['vacancies_found'],
-                    language[1]['vacancies_processed'],
-                    language[1]['average_salary']])
-    table = AsciiTable(data)
+    for lang_name, lang_statistic in languages.items():
+        data_for_table.append([lang_name,
+                    lang_statistic['vacancies_found'],
+                    lang_statistic['vacancies_processed'],
+                    lang_statistic['average_salary']])
+    table = AsciiTable(data_for_table)
     table.title = f'{site} Moscow'
-    print(table.table)
-
+    return table
 
