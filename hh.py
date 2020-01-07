@@ -1,7 +1,7 @@
 import requests
 from itertools import count
 from statistics import mean
-
+from salary import predict_rub_salary
 def get_vacancies():
     url = 'https://api.hh.ru/vacancies'
     data = {
@@ -39,13 +39,15 @@ def predict_rub_salary_for_HeadHunter(language):
             continue
         if language in vacancie['name'].lower():
             count_language += 1
-        if vacancie['salary']['from'] and vacancie['salary']['to']:
-            salaries.append(int((vacancie['salary']['from']+vacancie['salary']['to']) / 2))
-            continue
-        if vacancie['salary']['from']:
-            salaries.append(int(vacancie['salary']['from'] * 1.2))
-        else:
-            salaries.append(int(vacancie['salary']['to'] * 0.8))
+            salary = predict_rub_salary(vacancie['salary']['from'], vacancie['salary']['to'])
+            salaries.append(salary)
+       # if vacancie['salary']['from'] and vacancie['salary']['to']:
+       #     salaries.append(int((vacancie['salary']['from']+vacancie['salary']['to']) / 2))
+       #     continue
+       # if vacancie['salary']['from']:
+       #     salaries.append(int(vacancie['salary']['from'] * 1.2))
+       # else:
+       #     salaries.append(int(vacancie['salary']['to'] * 0.8))
     if salaries:
         avg_salary = int(mean(salaries))
     else:
