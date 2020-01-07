@@ -40,21 +40,6 @@ def predict_rub_salary_for_SuperJob(language):
         count_language += 1
         if not vacancie['payment_from'] and vacancie['payment_to']:
             continue
-        #if vacancie['payment_from'] and vacancie['payment_to']:
-        #    salary = int((vacancie['payment_from'] + vacancie['payment_to']) / 2)
-        #    salaries.append(salary)
-        #    count_language += 1
-        #    continue
-        #if vacancie['payment_from']:
-        #    salary = int(vacancie['payment_from'] * 1.2)
-        #    salaries.append(salary)
-        #    count_language += 1
-        #    continue
-        #else:
-        #   salary = int(vacancie['payment_to']*0.8)
-        #    salaries.append(salary)
-        #    count_language += 1
-        #    continue
         salary = predict_rub_salary(vacancie['payment_from'], vacancie['payment_to'])
         salaries.append(salary)
     if not salaries:
