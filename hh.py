@@ -7,7 +7,9 @@ from salary import predict_rub_salary
 def get_vacancies():
     url = 'https://api.hh.ru/vacancies'
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36'}
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) \
+        AppleWebKit/537.36 (KHTML, like Gecko) \
+        Chrome/79.0.3945.79 Safari/537.36'}
     for page in count(0):
         page_response = requests.get(url, params={
             'specialization': '1.221',
