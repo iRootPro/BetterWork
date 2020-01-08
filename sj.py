@@ -6,14 +6,16 @@ from statistics import mean
 from salary import predict_rub_salary
 load_dotenv()
 
+SECRET_KEY_SUPER_JOB = os.getenv('SECRET_KEY_SUPER_JOB')
+
+
 def get_vacancies():
-    SECRET_KEY_SUPER_JOB = os.getenv('SECRET_KEY_SUPER_JOB')
     headers = {
         'X-Api-App-Id': SECRET_KEY_SUPER_JOB
     }
     url = 'https://api.superjob.ru/2.0/vacancies'
     for page in count():
-        page_response= requests.get(url, headers=headers, params={
+        page_response = requests.get(url, headers=headers, params={
             'town': 4,
             'catalogues': 48,
             'count': 20,
@@ -35,12 +37,14 @@ def predict_rub_salary_for_SuperJob(language):
     for vacancie in vacancies:
         if not vacancie['currency'] == 'rub':
             continue
-        if not language in vacancie['profession'].lower():
+        if language not in vacancie['profession'].lower():
             continue
         count_language += 1
         if not vacancie['payment_from'] and vacancie['payment_to']:
             continue
-        salary = predict_rub_salary(vacancie['payment_from'], vacancie['payment_to'])
+        salary = predict_rub_salary(
+            vacancie['payment_from'], vacancie['payment_to']
+            )
         salaries.append(salary)
     if not salaries:
         avg_salary = 0
@@ -53,6 +57,7 @@ def predict_rub_salary_for_SuperJob(language):
         'average_salary': avg_salary
     }
     return data
+
 
 def get_languages_statistic():
     languages = {

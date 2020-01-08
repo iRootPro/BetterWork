@@ -2,18 +2,12 @@ import requests
 from itertools import count
 from statistics import mean
 from salary import predict_rub_salary
+
+
 def get_vacancies():
     url = 'https://api.hh.ru/vacancies'
-    data = {
-        'specialization': '1.221',
-        'area': '1',
-        'period': 30,
-        'per_page': 100
-    }
-
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36'
-    }
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36'}
     for page in count(0):
         page_response = requests.get(url, params={
             'specialization': '1.221',
@@ -28,6 +22,7 @@ def get_vacancies():
             break
         yield from page_data['items']
 
+
 def predict_rub_salary_for_HeadHunter(language):
     vacancies = get_vacancies()
     salaries = []
@@ -39,7 +34,10 @@ def predict_rub_salary_for_HeadHunter(language):
             continue
         if language in vacancie['name'].lower():
             count_language += 1
-            salary = predict_rub_salary(vacancie['salary']['from'], vacancie['salary']['to'])
+            salary = predict_rub_salary(
+                vacancie['salary']['from'], vacancie['salary']['to']
+                )
+
             salaries.append(salary)
     if salaries:
         avg_salary = int(mean(salaries))
@@ -54,6 +52,7 @@ def predict_rub_salary_for_HeadHunter(language):
     }
     return data
 
+
 def get_languages_statistic():
     languages = {
         'Python': predict_rub_salary_for_HeadHunter('python'),
@@ -66,4 +65,3 @@ def get_languages_statistic():
         'Go': predict_rub_salary_for_HeadHunter('go')
     }
     return languages
-

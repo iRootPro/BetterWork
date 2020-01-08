@@ -8,4 +8,3 @@ def predict_rub_salary(salary_from, salary_to):
     else:
         salary = int(salary_to * 0.8)
         return salary
- 
