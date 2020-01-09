@@ -1,19 +1,15 @@
 import requests
-import os
-from dotenv import load_dotenv
 from itertools import count
 from statistics import mean
+import os
 from salary import predict_rub_salary
-load_dotenv()
-
-SECRET_KEY_SUPER_JOB = os.getenv('SECRET_KEY_SUPER_JOB')
 
 
-def get_vacancies():
+def get_vacancies(secret_key_super_job):
     headers = {
-        'X-Api-App-Id': SECRET_KEY_SUPER_JOB
+        'X-Api-App-Id': secret_key_super_job
     }
-    url = 'https://api.superjob.ru/2.0/vacancies'
+    url = 'https://api.superjob.ru/3.0/vacancies'
     for page in count():
         page_response = requests.get(url, headers=headers, params={
             'town': 4,
@@ -30,8 +26,8 @@ def get_vacancies():
         yield from page_data['objects']
 
 
-def predict_rub_salary_for_SuperJob(language):
-    vacancies = get_vacancies()
+def predict_rub_salary_for_SuperJob(language, secret_key_super_job):
+    vacancies = get_vacancies(secret_key_super_job)
     salaries = []
     count_language = 0
     for vacancie in vacancies:
@@ -59,16 +55,16 @@ def predict_rub_salary_for_SuperJob(language):
     return data
 
 
-def get_languages_statistic():
+def get_languages_statistic(secret_key_super_job):
     languages = {
-        'Python': predict_rub_salary_for_SuperJob('python'),
-        'Java': predict_rub_salary_for_SuperJob('java'),
-        'JavaScript': predict_rub_salary_for_SuperJob('javascript'),
-        'PHP': predict_rub_salary_for_SuperJob('php'),
-        'Ruby': predict_rub_salary_for_SuperJob('ruby'),
-        'C++': predict_rub_salary_for_SuperJob('c++'),
-        'Swift': predict_rub_salary_for_SuperJob('Swift'),
-        'Go': predict_rub_salary_for_SuperJob('go')
+        'Python': predict_rub_salary_for_SuperJob('python', secret_key_super_job),
+        'Java': predict_rub_salary_for_SuperJob('java', secret_key_super_job),
+        'JavaScript': predict_rub_salary_for_SuperJob('javascript', secret_key_super_job),
+        'PHP': predict_rub_salary_for_SuperJob('php', secret_key_super_job),
+        'Ruby': predict_rub_salary_for_SuperJob('ruby', secret_key_super_job),
+        'C++': predict_rub_salary_for_SuperJob('c++', secret_key_super_job),
+        'Swift': predict_rub_salary_for_SuperJob('Swift', secret_key_super_job),
+        'Go': predict_rub_salary_for_SuperJob('go', secret_key_super_job)
     }
     return languages
 
